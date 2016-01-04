@@ -1,0 +1,21 @@
+Package: sumo.data
+Title: SUMO Empirical Experiment Results
+Version: 0.0.0.9000
+Authors@R: person("Mathew", "Hall", email = "m.hall@dcs.shef.ac.uk", role = c("aut", "cre"))
+Description: Contains the data sets used to generate the results for the
+    publication SUMO by Hall et al. 2016. The code to generate the plots is also
+    provided.
+Depends:
+    R (>= 3.2.2)
+License: MIT
+LazyData: true
+Imports:
+    reshape2,
+    plyr,
+    ggplot2,
+    ggmap,
+    grid
+Suggests:
+    xtable
+RoxygenNote: 5.0.1
+LazyData: true
