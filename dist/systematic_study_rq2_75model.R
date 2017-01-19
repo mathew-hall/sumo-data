@@ -33,18 +33,19 @@
     scale_y_continuous(expand=c(0,0)) +
     geom_blank(aes(y=ymax)) + geom_blank(aes(ymin=0)) + labs(y="SUMO Iterations to Converge")
   # + geom_segment(aes(x=x,y=y,yend=y,xend=xs), points, linetype="dashed")
-  ggsave('inst/fig/rq2-boxplot.pdf', rq2_boxplot, width=12,height=8)
+  ggsave('inst/fig/rq2-boxplot.pdf', rq2_boxplot, width=14,height=8)
 
   d_ply(results.75yr, .(scale), function(df){
-    ggplot(df, aes(CaseStudy,stepsToConverge)) +
+    ggplot(df, aes(reorder(CaseStudy,-steps),stepsToConverge)) +
       geom_boxplot() +
       theme_bw() +
       theme(axis.text.x = element_text(angle =  90, hjust =1,vjust=0.4), strip.text.y=element_blank(), strip.text.x=element_blank(),strip.background=element_blank(), axis.title.x=element_blank()) +
       scale_y_continuous(expand=c(0,0)) +
+      xlab("Subject System") +
       geom_blank(aes(y=ymax)) + geom_blank(aes(ymin=0)) + labs(y="SUMO Iterations to Converge") +
       coord_flip()
     # + geom_segment(aes(x=x,y=y,yend=y,xend=xs), points, linetype="dashed")
-    ggsave(paste0('inst/fig/rq2-boxplot-facet-',df$scale[1],'.pdf'), width=12,height=8)
+    ggsave(paste0('inst/fig/rq2-boxplot-facet-',df$scale[1],'.pdf'), width=9,height=6)
   })
 
 })()
@@ -110,4 +111,42 @@
     facet_wrap(~facet,scales="free",drop=T,as.table=F,nrow=2,) +
     theme(strip.text.y=element_blank(), strip.text.x=element_blank(), strip.background=element_blank(), legend.key.width = unit(0.9, "cm"), legend.direction = "horizontal", legend.position = "top")
   ggsave('inst/fig/rq3-median-yesRatio.pdf', rq3_median_yesRatio, width=5, height=4)
+})()
+
+
+(function(){
+  #Set boundaries for each facet [note these will need tweaking if new data comes in]
+  results.75yr <- systematic_results[systematic_results$yesRatio == .75,]
+
+  propOfSF100 <- (results.75yr %>% select(CaseStudy) %>% unique %>% count) / 100
+
+  medians <- results.75yr %>%
+    group_by(CaseStudy) %>%
+    summarise(median = median(stepsToConverge))
+
+  ecdf <- medians %>% arrange(median) %>% mutate(rank=cume_dist(median)) %>% mutate(sf100rank = 100 * rank * propOfSF100[1,])
+  ecdf %>% ggplot(aes(median,sf100rank)) +
+    scale_y_continuous(limits=c(0,100), breaks=c(0,25,50,75, max(ecdf$sf100rank),100)) +
+    geom_step() +
+    theme_bw() +
+    geom_hline(yintercept=max(ecdf$sf100rank), linetype=2) +
+    labs(
+      x="Median Steps to Converge",
+      y="Number of Subjects"
+    )
+  ggsave("inst/fig/rq1-median-cum-count.pdf", width=5,height=4)
+
+  steps <-
+    medians %>%
+    ggplot(aes(median)) +
+    stat_ecdf(pad=F) +
+    scale_y_continuous(labels=percent) +
+    theme_bw() +
+    labs(
+      x="Steps to Converge (Median)",
+      y="Proportion of Subjects",
+      title="ECDF of Steps Taken to Converge"
+    )
+  ggsave("inst/fig/rq1-median-ecdf.pdf", steps, width=5, height=4)
+
 })()
