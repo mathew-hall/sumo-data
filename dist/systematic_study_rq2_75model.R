@@ -91,7 +91,7 @@
     #	geom_line(data=worstCaseSizes, aes(Classes,Predicted.WorstCase/2), linetype=3, colour="black", size=0.4) +
     #	geom_line(data=worstCaseSizes, aes(Classes,Predicted.WorstCase/5.108), linetype=3, colour="black", size=0.4) +
     theme_bw() +
-    labs(x="Classes", y="Mean Relations")
+    labs(x="Classes", y="Mean Input Relationships")
 
   ggsave('inst/fig/rq2-rels-vs-worst.pdf', rq2_rels_vs_worst,width=5,height=4)
   ggsave('inst/fig/rq2-rels-vs-worst.png', rq2_rels_vs_worst,width=5,height=4)
@@ -140,7 +140,7 @@
     medians %>%
     ggplot(aes(median)) +
     stat_ecdf(pad=F) +
-    scale_y_continuous(labels=percent) +
+    scale_y_continuous(labels=scales::percent) +
     theme_bw() +
     labs(
       x="Steps to Converge (Median)",
