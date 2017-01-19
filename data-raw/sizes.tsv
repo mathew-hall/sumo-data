@@ -18,7 +18,7 @@ mdg/24_saxpath saxpath.jar 16 4
 mdg/25_jni-inchi jni_inchi.jar 24 1
 mdg/26_jipa jipa.jar 5 1
 mdg/27_gangup gangup.jar 51 4
-mdg/28_greencow greencow.jar 0 0
+mdg/28_greencow greencow.jar 1 1
 mdg/29_apbsmem apbsmem.jar 19 1
 mdg/2_a4j a4j.jar 45 6
 mdg/30_bpmail bpmail.jar 14 5
