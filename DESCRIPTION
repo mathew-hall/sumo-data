@@ -12,10 +12,10 @@ LazyData: true
 Imports:
     reshape2,
     plyr,
+    dplyr,
     ggplot2,
     ggmap,
     grid
 Suggests:
     xtable
 RoxygenNote: 5.0.1
-LazyData: true
