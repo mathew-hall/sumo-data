@@ -72,4 +72,33 @@ library(reshape2)
   ggsave('inst/fig/rq2-rels-yesno.pdf', rq2_rels_yesno, width=5,height=5)
 })()
 
+(average_time <- function(){
+
+  user_mojo_history %>% group_by(UID) %>%
+      summarise(
+        mean_secs = mean(Time[2:length(Time)] - Time[1:(length(Time)-1)]),
+        median_secs = median(Time[2:length(Time)] - Time[1:(length(Time)-1)]),
+        n = n()
+        )
+
+})()
+
+(grand_average_time <- function(){
+  average_time() %>% summarise(grand_mean=mean(mean_secs)/60, grand_median=median(median_secs)/60, total_mean=sum(mean_secs * n)/sum(n)/60)
+})()
+
+(all_median <- function(){
+  user_mojo_history %>%
+      group_by(UID) %>%
+      do({data.frame(relTime = .$Time[2:length(.$Time)] - .$Time[1:(length(.$Time)-1)])}) %>%
+      ungroup() %>%
+      summarise(median(relTime)/60)
+})()
+
+(positiveRatio <- function(){
+  user_results_summary %>% summarise(mean(Yes/(TotalRels)))
+})()
+
+
+user_results_summary %>% group_by(usedLock) %>% summarise(mean(TotalRels/num))
 
